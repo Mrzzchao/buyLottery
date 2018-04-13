@@ -1,45 +1,45 @@
 <template>
-    <div class="l-flex-1 l-relative l-flex-column">
-        <ul class="dingd-table l-full l-scroll-y" drunk-scroll>
-        <li class="slide"
-            v-for="item,idx in selectedMatchList">
-            <div class="dingd-table-hd">
-                <div class="dang-mteam">
-                    <span class="itm-team-l">
-                        <i v-if="item.homestanding > 0">[{{item.homestanding}}]</i> {{item.homesxname}}
-                    </span>
-                    <span class="itm-vs">VS</span>
-                    <span class="itm-team-r">
-                        {{item.awaysxname}}<i v-if="item.awaystanding > 0"> [{{item.awaystanding}}]</i>
-                    </span>
-                </div>
-            </div>
-            <div class="dingd-table-bd">
-                <div class="itm-td1" v-tap="{methods: removeItem, idx: idx}">
-                    <i class="ico-del"></i>
-                </div>
-                <div class="itm-td2">
-                    <div class="betbtns-wrap">
-                        <span class="betbtn"
-                              :class="{'betbtn-on': hasMoreStatus[item.mid]}"
-                               v-tap="{methods: openMoreSel, match: item}">
-                            {{hasSelectList[item.mid] | selectedFormat | truncate(30)}}
-                        </span>
-                    </div>
-                </div>
-            </div>
-        </li>
-        <agree/>
-    </ul>
-    </div>
+    <!--<div class="l-flex-1 l-relative l-flex-column">-->
+        <!--<ul class="dingd-table l-full l-scroll-y" drunk-scroll>-->
+        <!--<li class="slide"-->
+            <!--v-for="item,idx in selectedMatchList">-->
+            <!--<div class="dingd-table-hd">-->
+                <!--<div class="dang-mteam">-->
+                    <!--<span class="itm-team-l">-->
+                        <!--<i v-if="item.homestanding > 0">[{{item.homestanding}}]</i> {{item.homesxname}}-->
+                    <!--</span>-->
+                    <!--<span class="itm-vs">VS</span>-->
+                    <!--<span class="itm-team-r">-->
+                        <!--{{item.awaysxname}}<i v-if="item.awaystanding > 0"> [{{item.awaystanding}}]</i>-->
+                    <!--</span>-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div class="dingd-table-bd">-->
+                <!--<div class="itm-td1" v-tap="{methods: removeItem, idx: idx}">-->
+                    <!--<i class="ico-del"></i>-->
+                <!--</div>-->
+                <!--<div class="itm-td2">-->
+                    <!--<div class="betbtns-wrap">-->
+                        <!--<span class="betbtn"-->
+                              <!--:class="{'betbtn-on': hasMoreStatus[item.mid]}"-->
+                               <!--v-tap="{methods: openMoreSel, match: item}">-->
+                            <!--{{hasSelectList[item.mid] | selectedFormat | truncate(30)}}-->
+                        <!--</span>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</li>-->
+        <!--<agree/>-->
+    <!--</ul>-->
+    <!--</div>-->
 </template>
 
 <script>
 import {mTypes, aTypes} from '~store/jczq/home'
 import {SelectNameMap} from '~common/constants'
 import {initSelection} from '~common/util'
-import more from '~components/more.vue'
-import agree from '~components/agree.vue'
+import more from '~components/jczq/more.vue'
+import agree from '~components/jczq/agree.vue'
 export default {
     components: {
         more,
@@ -47,10 +47,10 @@ export default {
     },
     data() {
         return {
-            expanded: {},                                                // 更多历史战绩
+            expanded: {},                                                    // 更多历史战绩
             selection: this.$store.state.jczqHome.selection,                 // 选项状态列表
             selectedMatchList: this.$store.state.jczqHome.selectedMatchList, // 已选比赛列表
-            hasMoreStatus: {}                                            // 用户更多选中列表
+            hasMoreStatus: {}                                                 // 用户更多选中列表
         }
     },
     computed: {

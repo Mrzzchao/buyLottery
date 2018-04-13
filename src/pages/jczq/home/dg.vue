@@ -1,6 +1,6 @@
 <template v-if="dg">
     <div class="l-flex-1 l-relative l-flex-column">
-        <ul class="dang-list-ul dang-list-l-b l-full l-scroll-y" style="overflow-x: hidden" drunk-scroll>
+        <ul class="dang-list-ul dang-list-l-b l-full l-scroll-y" style="overflow-x: hidden">
             <li class="dang-list-li" v-for="item in dg" :class="{'curlight':item.rec}">
                 <div class="dang-list-main">
                     <div class="dang-list-l"
@@ -67,7 +67,7 @@
                     <div class="dang-list-info-arrow"><i class="ico-arrow2"></i></div>
                     <div class="dang-list-info-bd">
                         <ul>
-                            <li>历史交锋：{{item.count_against | formatAgaistText(item.homesxname)}}</li>
+                            <li>历史交锋：{{item.count_against | formatAgainstText(item.homesxname)}}</li>
                             <li>近期战绩：主队 {{item.count_home}}；客队 {{item.count_away}}</li>
                             <li>百家平均：<span>主胜 {{item.win||'-'}}</span><span>平 {{item.draw||'-'}}</span><span>主负 {{item.lost||'-'}}</span>
                             </li>
@@ -83,22 +83,27 @@
         </ul>
 
         <!--foot begin-->
-        <div class="ui-foot">
-            <div class="ui-foot-col ui-foot-col-rb" >
-                <div class="m">
-                    <p>至少选择<b>2</b>场，已选<b>{{count||0}}</b>场</p>
-                </div>
-                <div class="r" v-tap="{methods: selectEnd}">
-                    <span class="ui-foot-btn2" :class="{'btn2-off': count>15||count<2}">选好了</span>
-                </div>
-            </div>
+      <div class="ui-foot">
+        <div class="ui-foot-col">
+          <!--<div class="l">
+              <span class="ui-foot-btn1" drunk-on="goOptimize()">奖金优化</span>
+          </div>-->
+          <div class="m">
+            <p class="ui-foot-tc">已选<b>{{count||0}}</b>场</p>
+
+            <p class="ui-foot-tips ui-foot-tc">开奖结果不含加时赛进球</p>
+          </div>
+          <div class="r" v-tap="{methods: selectEnd}">
+            <span class="ui-foot-btn2" :class="{'btn2-off':!count}">选好了</span>
+          </div>
         </div>
+      </div>
     </div>
 </template>
 
 <script>
 import {mTypes, aTypes} from '~store/jczq/home'
-import moreDg from '~components/moreDg.vue'
+import moreDg from '~components/jczq/moreDg.vue'
 export default {
     components: {
         moreDg
@@ -106,8 +111,9 @@ export default {
     data() {
         return {
             expanded: {},                                                       // 更多历史战绩
-            selection: this.$store.state.jczqHome.selection,                        // 选项标志列表
-            hasMoreStatus: {}                                                   // 用户更多选中列表
+            selection: this.$store.state.jczqHome.selection,                    // 选项标志列表
+            hasMoreStatus: {},                                                   // 用户更多选中状态列表
+            delOption: ['spf', 'nspf']                                           // 不作为更多标红判断的选项配置
         }
     },
     computed: {
@@ -135,13 +141,12 @@ export default {
             return obj
         },
         selectedMatchList() {
-            let arr = []
+            let obj = {}
             let selectedMidList = Object.keys(this.filterSelection)
-            console.log(selectedMidList);
             selectedMidList.forEach((mid) => {
-                arr.push(this.dgFmt[mid])
+                obj[mid] = this.dgFmt[mid]
             })
-            return arr
+            return obj
         },
         hasSelectList() {
             let obj = {}
@@ -227,10 +232,10 @@ export default {
             })
         },
         selectEnd() {
-            if(this.count <= 15 && this.count >= 2) {
+            if(this.count >= 1) {
                 this.$store.commit(mTypes.setSelection, this.selection)
                 this.$store.commit(mTypes.setSelectedMatchList, this.selectedMatchList)
-                this.$router.push({name: 'order-dg'})
+                this.$router.push({name: 'jczq-order-dg'})
             } else {
                 return
             }
@@ -243,13 +248,13 @@ export default {
         this.$store.commit(mTypes.resetFilter, 'dg')
     },
     filters: {
-        formatAgaistText: function (input, homename) {
+        formatAgainstText: function (input, homename) {
             input = input.split("|");
             return "近" + input[0] + "次交战，" + homename + "  " + input[1] + "胜" + input[2] + "平" + input[3] + "负";
         }
     },
     watch: {
-        "$store.state.home.selection": {
+        "$store.state.jczqHome.selection": {
             handler(selection) {
                 this.selection = selection
                 this.initHasMoreStatus()

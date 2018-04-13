@@ -10,6 +10,9 @@ const _axios = axios.create(options)
 const ajax = function (url, config) {
     return _axios.get(url, config).then((response) => {
         if (response.status === 200) {
+          if(/^\/ews\//.test(url)) {
+            return response.data.data
+          }
             return response.data
         } else {
             throw new Error(response.message)

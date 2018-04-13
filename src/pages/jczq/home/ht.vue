@@ -98,8 +98,8 @@
 <script>
 import {mTypes, aTypes} from '~store/jczq/home'
 import {initSelection} from '~common/util'
-import more from '~components/more.vue'
-import expand from '~components/expand.vue'
+import more from '~components/jczq/more.vue'
+import expand from '~components/jczq/expand.vue'
 export default {
     components: {
         more,
@@ -108,9 +108,9 @@ export default {
     data() {
         return {
             expanded: {},                                                       // 更多历史战绩
-            selection: this.$store.state.jczqHome.selection,                        // 选项标志列表
+            selection: this.$store.state.jczqHome.selection,                    // 选项标志列表
             hasMoreStatus: {},                                                  // 用户更多选中列表
-            delOption: ['spf', 'nspf']                                          // 需要去除的选项配置
+            delOption: ['spf', 'nspf']                                          // 不作为更多标红判断的选项配置
         }
     },
     computed: {
@@ -221,7 +221,7 @@ export default {
             if(this.count <= 15 && this.count >= 2) {
                 this.$store.commit(mTypes.setSelection, this.selection)
                 this.$store.commit(mTypes.setSelectedMatchList, this.selectedMatchList)
-                this.$router.push({name: 'order-ht'})
+                this.$router.push({name: 'jczq-order-ht'})
             } else {
                 return
             }
@@ -234,7 +234,7 @@ export default {
         this.$store.commit(mTypes.resetFilter,'ht')
     },
     watch: {
-        "$store.state.home.selection": {
+        "$store.state.jczqHome.selection": {
             handler(selection) {
                 this.selection = selection
                 this.initHasMoreStatus()

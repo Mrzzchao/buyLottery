@@ -43,25 +43,29 @@ const initState = {
 }
 
 const actionsInfo = mapActions({
-    async getPlay({state, commit}, type) {
-        try {
+    async getPlay({state, commit, dispatch}, type) {
+        if(type === 'dg') {    // 单关特殊化处理
+          dispatch(aTypes.getDg)
+        } else {
+          try {
             const play = await ajax(`/mapi/v1/jczq/matches_${type}`)
             commit(mTypes.setPlay, {play, type})
             return play
-        } catch (e) {
+          } catch (e) {
             console.error('the server is error:' + e.message);
-        } finally {
+          } finally {
             const play = state.play.init[type]
             const len = Object.keys(state.selection).length
             if(play && !len) {
-                commit(mTypes.setSelection, initSelection(play))
+              commit(mTypes.setSelection, initSelection(play))
             }
+          }
         }
     },
     async getDg({state, commit}) {
         try {
-            let data = await ajax(`http://c.m.500.com/ews/jczq/data/dggp_nspf_spf`)
-            data = data.data.map((item) => {     // 将单关数据格式处理得和其他玩法一致
+            let data = await ajax(`/ews/jczq/data/dggp_nspf_spf`)
+            data = data.map((item) => {     // 将单关数据格式处理得和其他玩法一致
                 let obj = {}
                 obj = Object.assign({}, item.mdata, item.cdata, item.pdata)
                 obj.nspfpl = obj.nspf_pl
@@ -86,9 +90,9 @@ const actionsInfo = mapActions({
         commit(mTypes.setExpandedData, {expData, mid})
         return expData
     },
-    async getPeilv({commit}, mid) {
-        const peilv = await ajax(`http://c.m.500.com/ews/jczq/data/dggp?matchesid=${mid}`)
-        commit(mTypes.setPeilv, {peilv, mid})
+    async getPeilv({commit}, mid) {            // 获取彩种赔率
+        const peilv = await ajax(`/ews/jczq/data/dggp?matchesid=${mid}`)
+        commit(mTypes.setPeilv, peilv)
         return peilv
     }
 }, ns)
@@ -114,8 +118,8 @@ const mutationsInfo = mapMutations({
     setExpandedData(state, {expData, mid}) {
         state.expData[mid] = expData
     },
-    setPeilv(state, {peilv, mid}) {
-        state.peilvList[mid] = peilv.data[mid]
+    setPeilv(state, peilv) {
+        Object.assign(state.peilvList, peilv)
     },
     setFilterOption(state, {leagueSelection, filterPl}) {
         state.filterOption.leagueSelection = leagueSelection
@@ -124,7 +128,7 @@ const mutationsInfo = mapMutations({
     setSelection(state, selection) {
         state.selection = selection
     },
-    setAsyncSelection(state, {filterMatches, type}) {
+    setAsyncSelection(state, {filterMatches, type}) {    // 处理筛选赛事以后的选中状态列表
         let copyObj = {}
         const originSelection = JSON.parse(JSON.stringify(state.selection))
         state.selection = initSelection(state.play.init[type])

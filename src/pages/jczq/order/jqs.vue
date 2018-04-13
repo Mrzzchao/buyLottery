@@ -53,8 +53,8 @@
 import {mTypes, aTypes} from '~store/jczq/home'
 import {SelectNameMap} from '~common/constants'
 import {initSelection} from '~common/util'
-import more from '~components/more.vue'
-import agree from '~components/agree.vue'
+import more from '~components/jczq/more.vue'
+import agree from '~components/jczq/agree.vue'
 export default {
     components: {
         more,

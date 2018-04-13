@@ -44,8 +44,8 @@
 <script>
 import {mTypes, aTypes} from '~store/jczq/home'
 import {SelectNameMap} from '~common/constants'
-import more from '~components/more.vue'
-import expand from '~components/expand.vue'
+import more from '~components/jczq/more.vue'
+import expand from '~components/jczq/expand.vue'
 export default {
     components: {
         more,
@@ -166,7 +166,7 @@ export default {
             if(this.count <= 15 && this.count >= 2) {
                 this.$store.commit(mTypes.setSelection, this.selection)
                 this.$store.commit(mTypes.setSelectedMatchList, this.selectedMatchList)
-                this.$router.push({name: 'order-bqc'})
+                this.$router.push({name: 'jczq-order-bqc'})
             } else {
                 return
             }
@@ -196,7 +196,7 @@ export default {
         }
     },
     watch: {
-        "$store.state.home.selection": {
+        "$store.state.jczqHome.selection": {
             handler(selection) {
                 this.selection = selection
                 this.initHasMoreStatus()

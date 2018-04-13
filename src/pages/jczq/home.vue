@@ -65,7 +65,7 @@
 
 <script>
 import {mTypes, aTypes} from '~store/jczq/home'
-import filter from '~components/filter.vue'
+import filter from '~components/jczq/filter.vue'
 export default {
     data() {
         return {

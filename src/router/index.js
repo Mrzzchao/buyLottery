@@ -13,13 +13,13 @@ const JczqHomeJqs = () => import('~pages/jczq/home/jqs.vue')
 const JczqHomeBqc = () => import('~pages/jczq/home/bqc.vue')
 const JczqHomeDg = () => import('~pages/jczq/home/dg.vue')
 const JczqOrder = () => import('~pages/jczq/order.vue')
+const JczqOrderDg = () => import('~pages/jczq/orderDg.vue')
 const JczqOrderHt = () => import('~pages/jczq/order/ht.vue')
 const JczqOrderSpf = () => import('~pages/jczq/order/spf.vue')
 const JczqOrderNspf = () => import('~pages/jczq/order/nspf.vue')
 const JczqOrderBf = () => import('~pages/jczq/order/bf.vue')
 const JczqOrderJqs = () => import('~pages/jczq/order/jqs.vue')
 const JczqOrderBqc = () => import('~pages/jczq/order/bqc.vue')
-const JczqOrderDg = () => import('~pages/jczq/order/dg.vue')
 
 export function createRouter() {
     return new VueRouter({
@@ -109,6 +109,15 @@ export function createRouter() {
                   }
                 ]
               },
+              {   // 单关 独立开一个路由 因为他的订单处理比较特殊
+                path: 'order/dg',
+                component: JczqOrderDg,
+                name: 'jczq-order-dg',
+                meta: {
+                  type: 'dg',
+                  name: '单关'
+                }
+              },
               {
                 path: 'order',
                 component: JczqOrder,
@@ -166,15 +175,6 @@ export function createRouter() {
                     meta: {
                       type: 'bqc',
                       name: '半全场'
-                    }
-                  },
-                  {   // 单关
-                    path: 'dg',
-                    component: JczqOrderDg,
-                    name: 'jczq-order-dg',
-                    meta: {
-                      type: 'dg',
-                      name: '单关'
                     }
                   },
                   {
