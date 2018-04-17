@@ -114,17 +114,12 @@
       </div>
     </transition>
 
-    <!-- 提示框 -->
-    <template v-if="toast.msg">
-      <toast :toast="toast"></toast>
-    </template>
 
   </div>
 </template>
 
 <script>
   import constants from '~common/constants'
-  import toast from '~components/toast'
   import agree from '~components/jczq/agree.vue'
   import keyboards from '~components/keyboard.vue'
   import {calculator} from '~common/calc.dg.js'
@@ -132,7 +127,6 @@
 
   export default {
     components: {
-      toast,
       agree,
       keyboards
     },
@@ -155,9 +149,6 @@
       }
     },
     computed: {
-      toast() {
-        return this.$store.state.toast
-      },
       refreshAgreeTime() {
         return this.$store.state.agreeTime
       },
@@ -314,18 +305,8 @@
       goHome() {
         window.history.back()
       },
-      closeToast() {
-        this.$store.commit('setToast', {})
-      },
       showToast(msg) {
-        this.$store.commit('setToast', {
-          msg,
-          next: () => {
-            setTimeout(() => {
-              this.closeToast()
-            }, 2000)
-          }
-        })
+        this.$store.commit('setToast', {msg}) // 默认2000毫秒
       },
       maxError() {
         this.showToast('最大倍数不能超过3000')

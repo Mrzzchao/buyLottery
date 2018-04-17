@@ -177,10 +177,10 @@ export default {
             this.doLeagueFilter()
         },
         onCancel() {
-            this.params.onCancel()
+            typeof this.params.onCancel === 'function' && this.params.onCancel()
         },
         onConfirm() {
-            this.params.onConfirm(this.filterMatches, this.leagueSelection, this.filterPl)
+            typeof this.params.onConfirm === 'function' && this.params.onConfirm(this.filterMatches, this.leagueSelection, this.filterPl)
         },
         toggleSel({leagueName}) {
             this.$set(this.leagueSelection, leagueName, !(this.leagueSelection[leagueName]))

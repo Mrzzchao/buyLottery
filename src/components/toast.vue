@@ -8,9 +8,6 @@
 export default {
     props: ["toast"],
     mounted() {
-        if(typeof this.toast.next === 'function') {
-            this.toast.next()
-        }
     }
 }
 </script>

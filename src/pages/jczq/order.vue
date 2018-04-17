@@ -29,62 +29,6 @@
       <router-view></router-view>
     </div>
 
-    <transition name="fade">
-      <div class="ui-alert-layer" v-tap="{methods: closeDialog}" v-if="outer.component"></div>
-    </transition>
-    <transition name="slide">
-      <div v-if="outer.component" class="l-full" style="z-index: 101">
-        <component :is="outer.component" :params="outer.params"></component>
-      </div>
-    </transition>
-
-    <!-- 提示框 -->
-    <template v-if="toast.msg">
-      <toast :toast="toast"></toast>
-    </template>
-
-
-
-    <!-- 过关方式弹层 begin -->
-    <div class="ui-alert-layer" v-if="ggViewVisible"></div>
-    <div class="ui-alert ui-alert-guog" v-if="ggViewVisible">
-      <div class="ui-alert-tab">
-        <div class="ui-alert-tabhd">
-          <span :class="{on: isZiyouSelected}" v-tap="{methods: () => {isZiyouSelected = true}}">自由过关</span>
-          <span :class="{on: !isZiyouSelected}" v-tap="{methods: () => {isZiyouSelected = false}}">多串过关</span>
-        </div>
-        <div class="ui-alert-tabbd-wrap">
-          <div class="ui-alert-tabbd" :class="{hide: !isZiyouSelected}">
-            <div class="ui-foot-guog _parent">
-              <ul class="_child" style="overflow: hidden">
-                <li :class="{on: selectedSgTypes[sgtype.sid]}"
-                    v-tap="{methods: selectedSgTypesChange, sid: sgtype.sid}"
-                    v-for="sgtype in allowSgTypes.ziyou">
-                  <span>{{sgtype.sname}}</span>
-                </li>
-              </ul>
-            </div>
-          </div>
-          <div class="ui-alert-tabbd" :class="{hide: isZiyouSelected}">
-            <div class="ui-foot-guog _parent">
-              <ul class="_child" style="overflow: hidden">
-                <li :class="{on: selectedSgTypes[sgtype.sid]}"
-                    v-tap="{methods: selectedSgTypesChange, sid: sgtype.sid}"
-                    v-for="sgtype in allowSgTypes.duochuan">
-                  <span>{{sgtype.sname}}</span>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="ui-alert-ft">
-        <div class="ui-alert-btn" v-tap="{methods: () => {ggViewVisible = false,selectedSgTypes=selectedSgTypesBak}}">取消</div>
-        <div class="ui-alert-btn" v-tap="{methods: () => {ggViewVisible = false}}">确定</div>
-      </div>
-    </div>
-    <!-- 过关方式弹层 end -->
-
     <!--foot begin-->
     <div class="ui-foot ui-foot-big">
       <div class="ui-foot-col1">
@@ -121,32 +65,26 @@
 
 <script>
   import constants from '~common/constants'
-  import toast from '~components/toast'
   import {mTypes} from '~store/jczq/home'
+  import guoguan from '~components/jczq/guoguan.vue'
 
   export default {
-    components: {
-      toast
-    },
     data() {
       return {
         calculator: null,       // 奖金计算器
         isAgree: true,          // 同意协议标志
         playType: '',           // 玩法类型
         playTypeName: '',       // 玩法中文名
-        allowSgTypes: null,     // 允许选择的过关方式,有多串和自由过关
-        ggViewVisible: false,   // 过关方式弹窗标志
 
-        isZiyouSelected: true,  // 默认是自由过关方式
+        allowSgTypes: null,     // 允许选择的过关方式,有多串和自由过关
+        selectedSgTypes: null,  // 过关方式
+        sgTypeNameMap: null,    // 过关方式名
 
         beishu: 1,              // 投的倍数
         zhushu: 1,              // 投的注数
         money: '-',             // 投注金额
         award: '-',             // 奖金范围
-        selectedSgTypes: null,  // 过关方式
-        selectedSgTypesBak: null, // 过关选项备份
         selectedWithPl: null,   // 选项的赔率信息
-        sgTypeNameMap: null,    // 过关方式名
 
         _calcResult: null,      // 计算的结果,包含注数和最大奖金最小奖金
         accountData: null,       // 账户相关
@@ -186,7 +124,7 @@
         return Object.keys(this.selectedList).length
       },
       outer() {
-        return this.$store.state.jczqHome.outer
+        return this.$store.state.outer
       }
     },
     methods: {
@@ -197,49 +135,32 @@
           this.calculator = (await import('~common/calc.hhgg.js')).calculator  // 动态加载所需奖金计算器
           this.allowSgTypes = this.calculator.getAllowSgTypes(this.matchnum, this._selectedWithPl())
         } else {
-          this.calculator = (await import('~common/calc.js')).calculator       // 动态加载所需奖金计算器
+          this.calculator = (await import('~common/calc.js')).calculator  // 动态加载所需奖金计算器
           this.allowSgTypes = this.calculator.getAllowSgTypes(this.matchnum, this.playType)
         }
         this._resetSelectedSgType()
         this._calc()
       },
-      closeDialog() {
-        this.$store.commit(mTypes.setDialog, {})
-      },
-      closeToast() {
-        this.$store.commit('setToast', {})
-      },
       showToast(msg) {
-        this.$store.commit('setToast', {
-          msg,
-          next: () => {
-            setTimeout(() => {
-              this.closeToast()
-            }, 2000)
-          }
-        })
+        this.$store.commit('setToast', {msg}) // 默认2000毫秒
       },
       showSelectedSg() {
-        this.ggViewVisible = true
-        this.selectedSgTypesBak = JSON.parse(JSON.stringify(this.selectedSgTypes))
-      },
-      selectedSgTypesChange({sid}) {
-        if (this.selectedSgTypes[sid]) {
-          this.$set(this.selectedSgTypes, sid, false)
-          this.selectedSgTypes = Object.assign({}, this.selectedSgTypes)  // 解决watch不改变的问题
-        } else {
-          var num = 0;
-          Object.keys(this.selectedSgTypes).forEach(function (sid) {
-            this[sid] && num++;
-          }, this.selectedSgTypes);
-          if (num === 5) {
-            this.showToast('最多选5种过关方式')
-          } else {
-            this.$set(this.selectedSgTypes, sid, true)
-            this.selectedSgTypes = Object.assign({}, this.selectedSgTypes)  // 解决watch不改变的问题
-          }
-        }
-
+          this.$store.commit('setDialog', {
+              component: guoguan,
+              params: {
+                  allowSgTypes: this.allowSgTypes,
+                  sgTypeNameMap: this.sgTypeNameMap,
+                  selectedSgTypes: this.selectedSgTypes,
+                  onConfirm: (selectedSgTypes) => {
+                      this.selectedSgTypes = selectedSgTypes
+                      this.$store.commit('closeDialog')
+                  },
+                  onCancel: (selectedSgTypes) => {
+                      this.selectedSgTypes = selectedSgTypes
+                      this.$store.commit('closeDialog')
+                  }
+              }
+          })
       },
       goBack() {
         window.history.back()
@@ -296,7 +217,7 @@
       /**
        * 获取所有选中的项,并带上赔率信息
        */
-      _selectedWithPl: function () {
+      _selectedWithPl() {
         let result = {}
         let selected = this.selectedList
         let matchlist = this.selectedMatchList
@@ -337,10 +258,10 @@
                   }
 
                   // 获取投注时用的选项名字,如 胜平负 分别对应 3 1 0
-                  let optionName = constants.optionNameMap[playTypeName][name]
+                  let optionCode = constants.optionCodeMap[playTypeName][name]
 
                   // 记录赔率信息
-                  result[mid][constants.playTypeIDMap[playTypeName]][optionName] = Number(plData[name])
+                  result[mid][constants.playTypeIDMap[playTypeName]][optionCode] = Number(plData[name])
                 }
               })
             })
@@ -399,6 +320,14 @@
               yszqInfo[match.mid] = match.yszq
             }
           })
+                    console.log('====')
+          console.log(this.selectedWithPl);
+          console.log('====')
+          console.log(rangqiuInfo);
+          console.log('======');
+          console.log(yszqInfo);
+          console.log('=========');
+          console.log(sidList);
           this._calcResult = this.calculator.calc(this.selectedWithPl, rangqiuInfo,yszqInfo, sidList)
         }
         else {
@@ -409,7 +338,7 @@
         this._calcByResult()
       },
 
-      _calcByResult: function () {
+      _calcByResult() {
         let result = this._calcResult
         let beishu = this.beishu
         this.money = result.zhushu * 2 * beishu

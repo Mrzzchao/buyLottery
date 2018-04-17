@@ -88,17 +88,17 @@ export default {
             return obj
         },
         openMoreSel({match}) {
-            this.$store.commit(mTypes.setDialog, {
+            this.$store.commit('setDialog', {
                 component: more,
                 params: {
                     match,
                     type: 'all',
                     selection: this.selection[match.mid],
                     onConfirm: () => {
-                        this.$store.commit(mTypes.setDialog, {})
+                        this.$store.commit('closeDialog')
                     },
                     onCancel: () => {
-                        this.$store.commit(mTypes.setDialog, {})
+                        this.$store.commit('closeDialog')
                     }
                 }
             })

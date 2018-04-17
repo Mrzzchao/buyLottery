@@ -215,7 +215,7 @@ export default {
         },
         async openMoreSel({match}) {
             await this.fetchPeilv(match.id)
-            this.$store.commit(mTypes.setDialog, {
+            this.$store.commit('setDialog', {
                 component: moreDg,
                 params: {
                     match,
@@ -223,10 +223,10 @@ export default {
                     type: 'dg',
                     selection: this.selection[match.id],
                     onConfirm: () => {
-                        this.$store.commit(mTypes.setDialog, {})
+                        this.$store.commit('closeDialog')
                     },
                     onCancel: () => {
-                        this.$store.commit(mTypes.setDialog, {})
+                        this.$store.commit('closeDialog')
                     }
                 }
             })

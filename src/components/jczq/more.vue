@@ -203,10 +203,10 @@ export default {
     },
     methods: {
         onCancel() {
-            this.params.onCancel()
+            typeof this.params.onCancel === 'function' && this.params.onCancel()
         },
         onConfirm() {
-            this.params.onConfirm()
+            typeof this.params.onConfirm === 'function' && this.params.onConfirm()
         }
     }
 }

@@ -48,18 +48,6 @@
         <div class="l-flex-1" v-if="Object.keys(selection).length">  <!-- 只有selection初始化后才能渲染路由组件 -->
             <router-view></router-view>
         </div>
-
-        <!-- 弹层组件 -->
-        <transition name="fade">
-            <div v-if="outer.component" class="ui-alert-layer" v-tap="{methods: closeDialog}"></div>
-        </transition>
-
-        <transition name="slide">
-            <div v-if="outer.component" class="l-full" style="z-index: 101">
-                <component :is="outer.component" :params="outer.params"></component>
-            </div>
-        </transition>
-
     </div>
 </template>
 
@@ -85,9 +73,6 @@ export default {
         },
         curNav() {
             return this.playTypes[this.curType] || '更多'
-        },
-        outer() {
-            return this.$store.state.jczqHome.outer
         },
         matchlist() {
             return this.$store.state.jczqHome.play.init[this.curType]
@@ -116,11 +101,8 @@ export default {
         toggleNav() {
             this.navShow = !this.navShow
         },
-        closeDialog() {
-            this.$store.commit(mTypes.setDialog, {})
-        },
         showFilter() {
-            this.$store.commit(mTypes.setDialog, {
+            this.$store.commit('setDialog', {
                 component: filter,
                 params: {
                     matchlist: this.matchlist,
@@ -130,10 +112,10 @@ export default {
                         this.$store.commit(mTypes.setFilterOption, {leagueSelection, filterPl})                       // 设置筛选配置
                         this.$store.commit(mTypes.setFilterPlay, {play: filterMatches, type: this.$route.meta.type})  // 设置筛选后赛事
                         this.$store.commit(mTypes.setAsyncSelection, {filterMatches, type: this.$route.meta.type})    // 设置筛选后选项标志
-                        this.$store.commit(mTypes.setDialog, {})
+                        this.$store.commit('closeDialog')
                     },
                     onCancel: () => {
-                        this.$store.commit(mTypes.setDialog, {})
+                        this.$store.commit('closeDialog')
                     }
                 }
             })

@@ -98,10 +98,6 @@ const actionsInfo = mapActions({
 }, ns)
 
 const mutationsInfo = mapMutations({
-    setDialog(state, {component, params}) {
-        state.outer.component = component
-        state.outer.params = params
-    },
     setPlay(state, {play, type}) {
         state.play.init[type] = play
         if(!state.play.filter[type]) {  // 避免请求数据覆盖筛选数据
