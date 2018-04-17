@@ -273,6 +273,78 @@ export const playTypeIDMap = {
 
 // 选项名称
 export const optionNameMap = {
+    bf: {
+        a10: '1:0',
+        a20: '2:0',
+        a21: '2:1',
+        a30: '3:0',
+        a31: '3:1',
+        a32: '3:2',
+        a40: '4:0',
+        a41: '4:1',
+        a42: '4:2',
+        a50: '5:0',
+        a51: '5:1',
+        a52: '5:2',
+        aother: '胜其它',
+        b10: '0:1',
+        b20: '0:2',
+        b21: '1:2',
+        b30: '0:3',
+        b31: '1:3',
+        b32: '2:3',
+        b40: '0:4',
+        b41: '1:4',
+        b42: '2:4',
+        b50: '0:5',
+        b51: '1:5',
+        b52: '2:5',
+        bother: '负其它',
+        c00: '0:0',
+        c11: '1:1',
+        c22: '2:2',
+        c33: '3:3',
+        cother: '平其它'
+    },
+    spf: {
+        win: '胜',
+        draw: '平',
+        lost: '负'
+    },
+    nspf: {
+        win: '胜',
+        draw: '平',
+        lost: '负'
+    },
+    jqs: {
+        s0: '0球',
+        s1: '1球',
+        s2: '2球',
+        s3: '3球',
+        s4: '4球',
+        s5: '5球',
+        s6: '6球',
+        s7: '7+球',
+    },
+    bqc: {
+        aa: '胜-胜',
+        ab: '胜-负',
+        ac: '胜-平',
+        ba: '负-胜',
+        bb: '负-负',
+        bc: '负-平',
+        ca: '平-胜',
+        cb: '平-负',
+        cc: '平-平'
+    },
+    dxq:{
+        big:'大球',
+        small:'小球'
+    }
+}
+
+// 选项代码
+export const optionCodeMap = {
     nspf: {
         win: 3,
         draw: 1,
@@ -283,7 +355,43 @@ export const optionNameMap = {
         draw: 1,
         lost: 0
     },
-    bf: bfNameMap,
+    dxq: {
+        big: 1,
+        small: 2
+    },
+    bf: {
+        a10: '1:0',
+        a20: '2:0',
+        a21: '2:1',
+        a30: '3:0',
+        a31: '3:1',
+        a32: '3:2',
+        a40: '4:0',
+        a41: '4:1',
+        a42: '4:2',
+        a50: '5:0',
+        a51: '5:1',
+        a52: '5:2',
+        aother: '胜其它',
+        b10: '0:1',
+        b20: '0:2',
+        b21: '1:2',
+        b30: '0:3',
+        b31: '1:3',
+        b32: '2:3',
+        b40: '0:4',
+        b41: '1:4',
+        b42: '2:4',
+        b50: '0:5',
+        b51: '1:5',
+        b52: '2:5',
+        bother: '负其它',
+        c00: '0:0',
+        c11: '1:1',
+        c22: '2:2',
+        c33: '3:3',
+        cother: '平其它'
+    },
     jqs: {
         s0: '0',
         s1: '1',
@@ -304,10 +412,6 @@ export const optionNameMap = {
         ca: '1-3',
         cb: '1-0',
         cc: '1-1'
-    },
-    dxq:{
-        big:1,
-        small:2
     }
 }
 
@@ -319,5 +423,6 @@ export default {
     jqsNameMap,
     playTypeNameMap,
     playTypeIDMap,
-    optionNameMap
+    optionNameMap,
+    optionCodeMap
 }
